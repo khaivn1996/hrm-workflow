@@ -1,0 +1,90 @@
+# =========================
+# IDE / VCS
+# =========================
+**/.git/**
+**/.idea/**
+**/.vscode/**
+
+# =========================
+# Secrets / env / certs
+# =========================
+.env
+.env.*
+*.pem
+*.key
+*.crt
+*.pfx
+
+# =========================
+# Python cache / virtual env
+# =========================
+**/__pycache__/**
+*.pyc
+**/.pytest_cache/**
+**/.mypy_cache/**
+**/.ruff_cache/**
+**/.venv/**
+**/venv/**
+**/env/**
+**/htmlcov/**
+.coverage
+
+# =========================
+# Logs / local databases
+# =========================
+**/logs/**
+*.log
+*.sqlite
+*.sqlite3
+*.db
+
+# =========================
+# Node / frontend build output
+# =========================
+**/node_modules/**
+**/dist/**
+**/build/**
+**/.vite/**
+**/.cache/**
+**/coverage/**
+**/.next/**
+**/.nuxt/**
+
+# =========================
+# Generated/minified/source maps
+# =========================
+*.map
+*.min.js
+*.min.css
+
+# =========================
+# Lock files
+# =========================
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+bun.lockb
+
+# =========================
+# Docker / local storage
+# =========================
+**/docker-data/**
+**/qdrant_storage/**
+
+# =========================
+# Binary / data / documents
+# =========================
+*.xlsx
+*.xls
+*.csv
+*.pdf
+*.zip
+*.rar
+*.7z
+*.tmp
+
+# =========================
+# Roo tree-sitter HTML parser issue
+# =========================
+<!-- hrm_FE/index.html
+docs/*.html -->

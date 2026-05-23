@@ -1,0 +1,121 @@
+<type_classification_rules>
+  <overview>
+    Rules for classifying each XML column into a data type for Grid_X_cols_types.
+    Classification uses both the UPPERCASE column name and the Vietnamese title.
+    Rules are evaluated in priority order — first match wins.
+  </overview>
+
+  <classification_table>
+    <!-- Priority 1: Fixed special columns -->
+    <rule priority="1">
+      <criteria>Column name is STT</criteria>
+      <type>text</type>
+      <examples>STT</examples>
+    </rule>
+
+    <rule priority="2">
+      <criteria>Column name is TT (Thao tác / action column)</criteria>
+      <type>action</type>
+      <examples>TT</examples>
+    </rule>
+
+    <!-- Priority 2: Date columns -->
+    <rule priority="3">
+      <criteria>Title contains "Ngày", "ngày", or "Date" (case-insensitive)</criteria>
+      <type>date</type>
+      <examples>NV_NGAYVAO ("Ngày vào"), NV_NGAYSINH ("Ngày sinh")</examples>
+    </rule>
+
+    <!-- Priority 3: Explicit text columns by name pattern -->
+    <rule priority="4">
+      <criteria>Column name contains _MA or _MA_ (mã code fields)</criteria>
+      <type>text</type>
+      <examples>NV_MA, DV_MA_, T_MA, DV_MA</examples>
+    </rule>
+
+    <rule priority="5">
+      <criteria>Column name contains _TEN (tên / name fields)</criteria>
+      <type>text</type>
+      <examples>NV_TEN, CVU_TEN, CV_TEN, DV_TEN</examples>
+    </rule>
+
+    <rule priority="6">
+      <criteria>Column name starts with BACLUONG (bậc lương — grade codes, not numbers)</criteria>
+      <type>text</type>
+      <examples>BACLUONGCU, BACLUONGMOI</examples>
+    </rule>
+
+    <rule priority="7">
+      <criteria>Column name is GHICHU or contains GHICHU (ghi chú / notes)</criteria>
+      <type>text</type>
+      <examples>GHICHU</examples>
+    </rule>
+
+    <!-- Priority 4: Numeric columns by name pattern -->
+    <rule priority="8">
+      <criteria>Column name starts with TC (trợ cấp / allowance)</criteria>
+      <type>number</type>
+      <examples>TCTHORAPCU, TCTHORAPMOI, TCTRACHNHIEM</examples>
+    </rule>
+
+    <rule priority="9">
+      <criteria>Column name starts with TONG (tổng / total)</criteria>
+      <type>number</type>
+      <examples>TONGPHEPTHUCTE, TONGSODANGHI, TONGCONG</examples>
+    </rule>
+
+    <rule priority="10">
+      <criteria>Column name starts with HESO (hệ số / coefficient)</criteria>
+      <type>number</type>
+      <examples>HESOCU, HESOMOI, HESOLUONG</examples>
+    </rule>
+
+    <rule priority="11">
+      <criteria>Column name starts with LUONG (lương / salary)</criteria>
+      <type>number</type>
+      <examples>LUONGCOBAN, LUONGMOI, LUONGCU</examples>
+    </rule>
+
+    <!-- Priority 5: Numeric columns by title keywords -->
+    <rule priority="12">
+      <criteria>Title contains "Hệ số", "Lương", "Trợ cấp", "Phụ cấp", "Tổng"</criteria>
+      <type>number</type>
+      <examples>Columns with salary/allowance/total-related titles</examples>
+    </rule>
+
+    <!-- Priority 6: Month/period columns (T1-T12, THANG1-THANG12) -->
+    <rule priority="13">
+      <criteria>Column name matches T[0-9]+ or THANG[0-9]+ pattern (monthly data)</criteria>
+      <type>number</type>
+      <examples>T1, T2, T12, THANG1, THANG12</examples>
+    </rule>
+
+    <!-- Priority 7: Leave/attendance numeric columns -->
+    <rule priority="14">
+      <criteria>Column name starts with PN_ (phép năm / annual leave related)</criteria>
+      <type>number</type>
+      <examples>PN_SONGAYNAMTRUOC, PN_SONGAYNAMNAY, PN_NANGNHOCDH, PN_PHEPTREN5NAM</examples>
+    </rule>
+
+    <rule priority="15">
+      <criteria>Column name is CONLAI (còn lại / remaining)</criteria>
+      <type>number</type>
+      <examples>CONLAI</examples>
+    </rule>
+
+    <!-- Default fallback -->
+    <rule priority="99">
+      <criteria>No other rule matches</criteria>
+      <type>text</type>
+      <note>Default to text. Flag in the completion checklist for user review.</note>
+    </rule>
+  </classification_table>
+
+  <important_notes>
+    <note>BACLUONGCU and BACLUONGMOI are text (grade codes like "1/6"), NOT numbers</note>
+    <note>TC* columns are always number even if the title does not mention "số"</note>
+    <note>Month columns (T1-T12, THANG1-THANG12) are always number</note>
+    <note>_MA fields are always text (they are code identifiers)</note>
+    <note>When in doubt, prefer text over number — safer for display</note>
+  </important_notes>
+</type_classification_rules>

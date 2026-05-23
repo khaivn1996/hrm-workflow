@@ -1,0 +1,174 @@
+<complete_examples>
+  <overview>
+    Example workflows showing how the Research mode handles typical investigation tasks.
+  </overview>
+
+  <example name="trace_feature_flow">
+    <scenario>
+      User wants to understand how the attendance (điểm danh) feature works end-to-end.
+    </scenario>
+
+    <user_request>
+      How does the daily attendance feature work? Trace the full flow.
+    </user_request>
+
+    <workflow>
+      <step number="1">
+        <description>Locate the frontend component</description>
+        <approach>
+          Use semantic search for "điểm danh hàng ngày" or "daily attendance" to find the Vue component.
+          Check hrm_FE/src/components/CHAMCONG/ directory listing.
+        </approach>
+        <expected_outcome>Identify diemdanhhangngay-related component files</expected_outcome>
+      </step>
+
+      <step number="2">
+        <description>Read the component and identify API calls</description>
+        <approach>
+          Read the component file, focusing on imports from src/apis/ and function calls.
+          Identify which API module and functions are used.
+        </approach>
+        <expected_outcome>List of API functions called and their parameters</expected_outcome>
+      </step>
+
+      <step number="3">
+        <description>Trace through the API module to the backend</description>
+        <approach>
+          Read the API module to find endpoint URLs.
+          Search for matching FastAPI route definitions in hrm_BE/.
+        </approach>
+        <expected_outcome>Mapped frontend API calls to backend endpoints</expected_outcome>
+      </step>
+
+      <step number="4">
+        <description>Read the backend route and query registry</description>
+        <approach>
+          Read the router handler. Identify query keys used.
+          Read hrm_BE/app/queries/diemdanhhangngay_queries.py for the actual SQL.
+        </approach>
+        <expected_outcome>Full understanding of the SQL operations and data transformations</expected_outcome>
+      </step>
+
+      <step number="5">
+        <description>Synthesize findings</description>
+        <approach>
+          Present the complete flow as a numbered trace with file references at each stage.
+        </approach>
+      </step>
+    </workflow>
+
+    <completion>
+      Present a structured trace showing:
+      Component → API function → HTTP endpoint → Router handler → Query key → SQL query → Response shape → Frontend processing.
+      Each step includes clickable file references.
+    </completion>
+
+    <key_takeaways>
+      <takeaway>Always trace through the query registry to see the actual SQL</takeaway>
+      <takeaway>Note auth dependencies and permission requirements at each layer</takeaway>
+    </key_takeaways>
+  </example>
+
+  <example name="find_pattern_usage">
+    <scenario>
+      User wants to understand how batch operations are implemented across the codebase.
+    </scenario>
+
+    <user_request>
+      What pattern do batch operations follow? Show me examples from different modules.
+    </user_request>
+
+    <workflow>
+      <step number="1">
+        <description>Search for batch-related code</description>
+        <approach>
+          Use semantic search for "batch operation" and "bulk insert".
+          Use regex search for "batch" or "rows_affected" across backend files.
+        </approach>
+        <expected_outcome>List of files implementing batch operations</expected_outcome>
+      </step>
+
+      <step number="2">
+        <description>Read 3-4 representative batch implementations</description>
+        <approach>
+          Select batch handlers from different modules (e.g., attendance, salary, HR).
+          Read each to understand the common structure.
+        </approach>
+        <expected_outcome>Understanding of the shared pattern and any variations</expected_outcome>
+      </step>
+
+      <step number="3">
+        <description>Create comparison table</description>
+        <approach>
+          Build a markdown table comparing: endpoint, payload structure, transaction behavior,
+          response format, error handling across the selected modules.
+        </approach>
+      </step>
+    </workflow>
+
+    <completion>
+      Present a comparison table of batch implementations with a summary of the common pattern
+      and any notable deviations. Include file references for each example.
+    </completion>
+
+    <key_takeaways>
+      <takeaway>Compare multiple implementations to identify the dominant pattern</takeaway>
+      <takeaway>Note deviations — they may be intentional or candidates for standardization</takeaway>
+    </key_takeaways>
+  </example>
+
+  <example name="answer_architecture_question">
+    <scenario>
+      User wants to understand the authentication and session management architecture.
+    </scenario>
+
+    <user_request>
+      How does auth work? JWT, heartbeat, session cleanup — explain the full picture.
+    </user_request>
+
+    <workflow>
+      <step number="1">
+        <description>Read the key auth files</description>
+        <approach>
+          Read the known auth-related files: security.py, session_cleanup.py, authStores.js,
+          axiosInterceptor.js, Login.vue, apiLogin.js.
+        </approach>
+        <expected_outcome>Understanding of each component's role in the auth system</expected_outcome>
+      </step>
+
+      <step number="2">
+        <description>Trace the login flow</description>
+        <approach>
+          Follow the login from UI form submission through API call, backend validation,
+          JWT creation, token storage, and session initialization.
+        </approach>
+      </step>
+
+      <step number="3">
+        <description>Trace the heartbeat flow</description>
+        <approach>
+          Find the heartbeat timer in the frontend, the heartbeat endpoint in the backend,
+          and the cleanup mechanism for stale sessions.
+        </approach>
+      </step>
+
+      <step number="4">
+        <description>Synthesize into an architecture overview</description>
+        <approach>
+          Present a structured overview with sections for: Login, Token Management,
+          Heartbeat, Session Cleanup, Permission Loading, and Error Handling (401/403).
+        </approach>
+      </step>
+    </workflow>
+
+    <completion>
+      Present a multi-section architecture overview with flow descriptions and file references.
+      Include timing details (heartbeat interval, cleanup threshold) found in the code.
+    </completion>
+
+    <key_takeaways>
+      <takeaway>Auth spans both frontend and backend — trace both sides</takeaway>
+      <takeaway>Include timing constants and configuration values in the findings</takeaway>
+    </key_takeaways>
+  </example>
+</complete_examples>

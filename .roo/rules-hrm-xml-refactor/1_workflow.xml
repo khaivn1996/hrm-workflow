@@ -1,0 +1,173 @@
+<xml_refactor_workflow>
+  <mode_overview>
+    This mode converts XML column definitions (coldgrtieuchuan tags) from legacy
+    HRM grid specifications into Vue 3 Grid config blocks. It follows a strict
+    7-step process to produce 4 code blocks per grid: cols_all, cols_display,
+    cols_labels, and cols_types.
+  </mode_overview>
+
+  <input_requirements>
+    <requirement>XML block containing coldgrtieuchuan tags with attributes: tblColName, title, hide, width, positionCol</requirement>
+    <requirement>Target Vue component file path</requirement>
+    <requirement>Grid index (Grid_0, Grid_1, etc.) identifying which 4 blocks to update</requirement>
+    <requirement>Optional: line ranges for the 4 code blocks if user provides them</requirement>
+  </input_requirements>
+
+  <main_workflow>
+    <step number="1">
+      <title>Parse XML Column Definitions</title>
+      <description>
+        Read each coldgrtieuchuan tag and extract:
+        1. tblColName → convert to UPPERCASE (e.g., NV_Ngayvao → NV_NGAYVAO)
+        2. title → preserve exactly as-is (Vietnamese labels)
+        3. hide → determine true/false (case-insensitive: "TRUE", "True", "true" all mean hidden)
+        4. positionCol → sort all columns by this value ascending
+      </description>
+      <validation>
+        Confirm total column count matches the number of coldgrtieuchuan tags in the XML.
+      </validation>
+    </step>
+
+    <step number="2">
+      <title>Classify Data Types</title>
+      <description>
+        Assign a data type to each column based on the type classification rules
+        defined in 2_type_classification.xml. Use both the column name (UPPERCASE)
+        and the title text to determine the correct type.
+      </description>
+      <validation>
+        Every column must have exactly one type assigned.
+        Count totals per type for the final checklist.
+      </validation>
+    </step>
+
+    <step number="3">
+      <title>Generate Grid_X_cols_all</title>
+      <description>
+        Create a JavaScript const array containing ALL column names (UPPERCASE),
+        including hidden columns. Preserve STT and TT at the beginning if they
+        exist in the original code.
+      </description>
+      <format>
+        const Grid_X_cols_all = [
+          "STT",
+          "COLUMN_NAME_1",
+          "COLUMN_NAME_2",
+          ...
+        ];
+      </format>
+      <rules>
+        <rule>Include ALL columns from XML, sorted by positionCol</rule>
+        <rule>All column names UPPERCASE</rule>
+        <rule>Preserve STT/TT from original code if present</rule>
+        <rule>Use 2-space indentation, trailing comma on each line</rule>
+      </rules>
+    </step>
+
+    <step number="4">
+      <title>Generate Grid_X_cols_display</title>
+      <description>
+        Create a JavaScript const array containing only columns where hide="false"
+        (case-insensitive). Exclude columns where hide="true".
+      </description>
+      <format>
+        const Grid_X_cols_display = [
+          "STT",
+          "VISIBLE_COLUMN_1",
+          ...
+        ];
+      </format>
+      <rules>
+        <rule>Only include columns with hide="false"</rule>
+        <rule>Preserve STT/TT from original code if present and visible</rule>
+        <rule>Same UPPERCASE and formatting rules as cols_all</rule>
+      </rules>
+    </step>
+
+    <step number="5">
+      <title>Generate Grid_X_cols_labels</title>
+      <description>
+        Create a JavaScript const object mapping each column name (UPPERCASE)
+        to its title from the XML. Include ALL columns (both visible and hidden).
+      </description>
+      <format>
+        const Grid_X_cols_labels = {
+          STT: "STT",
+          COLUMN_NAME: "Vietnamese Title",
+          ...
+        };
+      </format>
+      <rules>
+        <rule>Include ALL columns from cols_all</rule>
+        <rule>Keys are UPPERCASE column names</rule>
+        <rule>Values are the exact title text from XML (Vietnamese)</rule>
+        <rule>Preserve STT/TT labels from original code if present</rule>
+      </rules>
+    </step>
+
+    <step number="6">
+      <title>Generate Grid_X_cols_types</title>
+      <description>
+        Create a JavaScript const object mapping each column name (UPPERCASE)
+        to its classified data type from Step 2.
+      </description>
+      <format>
+        const Grid_X_cols_types = {
+          STT: "text",
+          TT: "action",
+          NV_NGAYVAO: "date",
+          HESOCU: "number",
+          ...
+        };
+      </format>
+      <rules>
+        <rule>Include ALL columns from cols_all</rule>
+        <rule>Types must match the classification from Step 2</rule>
+        <rule>Preserve STT/TT types from original code if present</rule>
+      </rules>
+    </step>
+
+    <step number="7">
+      <title>Apply to Vue Component</title>
+      <description>
+        Replace the 4 target code blocks in the Vue component file using
+        precise diff operations. Only modify the specified Grid_X blocks.
+      </description>
+      <rules>
+        <rule>Do NOT modify other Grid blocks (Grid_1 when editing Grid_0, etc.)</rule>
+        <rule>Do NOT modify code logic outside the 4 specified blocks</rule>
+        <rule>Preserve 2-space indentation and trailing commas</rule>
+        <rule>Ensure all column names are UPPERCASE in the output</rule>
+        <rule>Use targeted diff replacements, not full file rewrites</rule>
+      </rules>
+    </step>
+  </main_workflow>
+
+  <completion_checklist>
+    <description>After completing all 7 steps, report to the user:</description>
+    <item>Total number of columns in cols_all</item>
+    <item>Number of hidden columns (hide=true) — list their names</item>
+    <item>Number of visible columns in cols_display</item>
+    <item>Type breakdown: count of text, number, date, action columns</item>
+    <item>Columns that were converted to UPPERCASE (if original had mixed case)</item>
+  </completion_checklist>
+
+  <error_handling>
+    <scenario name="missing_xml">
+      <condition>User does not provide XML block</condition>
+      <action>Ask user to paste the XML containing coldgrtieuchuan tags</action>
+    </scenario>
+    <scenario name="missing_target">
+      <condition>User does not specify which Grid_X to update</condition>
+      <action>Read the Vue file and identify available Grid config blocks, then ask user to confirm which one</action>
+    </scenario>
+    <scenario name="ambiguous_type">
+      <condition>Column name and title do not clearly match any type rule</condition>
+      <action>Default to "text" and note it in the checklist for user review</action>
+    </scenario>
+    <scenario name="existing_stt_tt">
+      <condition>Original code has STT/TT columns not in the XML</condition>
+      <action>Preserve them at the beginning of all 4 blocks</action>
+    </scenario>
+  </error_handling>
+</xml_refactor_workflow>

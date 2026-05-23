@@ -1,0 +1,90 @@
+<research_tracing_patterns>
+  <overview>
+    Common patterns for tracing features and data flows in the HRM codebase.
+    Use these as starting templates when investigating specific areas.
+  </overview>
+
+  <pattern name="end_to_end_feature_trace">
+    <description>Trace a feature from the UI component down to the database query and back</description>
+    <steps>
+      <step>Identify the Vue component in hrm_FE/src/components/ or hrm_FE/src/views/</step>
+      <step>Find the API calls the component makes — look for imports from src/apis/</step>
+      <step>Read the API module to find the endpoint URL and HTTP method</step>
+      <step>Locate the matching FastAPI router in hrm_BE/ (match by URL path)</step>
+      <step>In the router, identify the query registry key or service function called</step>
+      <step>Read the query file in hrm_BE/app/queries/ to see the actual SQL</step>
+      <step>Note the response shape and how the frontend processes it</step>
+    </steps>
+    <output_format>
+      Present as a numbered flow:
+      1. Component → API function → Endpoint → Query key → SQL → Response handling
+    </output_format>
+  </pattern>
+
+  <pattern name="query_registry_lookup">
+    <description>Find and understand a specific query registry entry</description>
+    <steps>
+      <step>Search for the query key string across hrm_BE/app/queries/</step>
+      <step>Read the query function to understand parameters and SQL</step>
+      <step>Search for usages of the key in router/service files</step>
+      <step>Identify which frontend API module calls the endpoint that uses this key</step>
+    </steps>
+  </pattern>
+
+  <pattern name="permission_flow_trace">
+    <description>Understand how permissions control access to a feature</description>
+    <steps>
+      <step>Check the Vue Router config in hrm_FE/src/router/index.ts for route meta permissions</step>
+      <step>Check the permission store in hrm_FE/src/stores/permissionStore.js</step>
+      <step>Check the backend route for auth dependencies (Depends on current_user, permission checks)</step>
+      <step>Trace how the permission code is loaded during login</step>
+    </steps>
+  </pattern>
+
+  <pattern name="component_dependency_map">
+    <description>Map all dependencies of a Vue component</description>
+    <steps>
+      <step>Read the component's imports (other components, composables, stores, APIs, utilities)</step>
+      <step>Identify Element Plus components used in the template</step>
+      <step>List Pinia stores accessed</step>
+      <step>List API functions called</step>
+      <step>Note any worker usage (useDataWorker, useExcelExport)</step>
+    </steps>
+  </pattern>
+
+  <pattern name="cross_module_pattern_comparison">
+    <description>Compare how a pattern is implemented across multiple modules</description>
+    <steps>
+      <step>Identify 3-5 representative modules that use the pattern</step>
+      <step>Read the relevant section of each module</step>
+      <step>Create a comparison table showing similarities and differences</step>
+      <step>Note any deviations from the dominant pattern</step>
+    </steps>
+    <output_format>
+      Present as a markdown table with columns for each module and rows for each aspect of the pattern.
+    </output_format>
+  </pattern>
+
+  <pattern name="auth_session_trace">
+    <description>Trace authentication and session management</description>
+    <key_files>
+      <file>hrm_FE/src/Layout/Login.vue — login UI</file>
+      <file>hrm_FE/src/apis/apiLogin.js — login API calls</file>
+      <file>hrm_FE/src/stores/authStores.js — auth state</file>
+      <file>hrm_FE/src/utils/axiosInterceptor.js — token injection and 401 handling</file>
+      <file>hrm_BE/app/security.py — JWT creation and validation</file>
+      <file>hrm_BE/app/session_cleanup.py — heartbeat session cleanup</file>
+    </key_files>
+  </pattern>
+
+  <pattern name="batch_operation_trace">
+    <description>Trace a batch/bulk operation from frontend to backend</description>
+    <steps>
+      <step>Find the component that initiates the batch (look for batch submit buttons or bulk actions)</step>
+      <step>Identify the API call and payload structure</step>
+      <step>Find the backend endpoint handling the batch</step>
+      <step>Understand the transaction behavior (all-or-nothing vs partial success)</step>
+      <step>Check the response structure (success/inserted/failed counts)</step>
+    </steps>
+  </pattern>
+</research_tracing_patterns>

@@ -1,0 +1,147 @@
+<refactor_examples>
+  <overview>
+    Complete examples demonstrating the XML-to-Grid-config refactoring workflow.
+  </overview>
+
+  <example name="leave_tracking_grid">
+    <scenario>
+      User provides XML for a leave tracking (nghỉ phép) grid with 23 columns
+      from coldgrtieuchuan tags, plus 2 existing columns (STT, NV_TEN) already
+      in the Vue component.
+    </scenario>
+
+    <sample_xml>
+      <![CDATA[
+<coldgrtieuchuan tblColName="NV_Ten" title="Họ Tên" hide="false" width="150" positionCol="1"/>
+<coldgrtieuchuan tblColName="DV_Ma_" title="Đơn vị" hide="false" width="80" positionCol="2"/>
+<coldgrtieuchuan tblColName="NV_Ma" title="Số thẻ" hide="false" width="80" positionCol="3"/>
+<coldgrtieuchuan tblColName="CV_Ten" title="Chức vụ" hide="false" width="120" positionCol="4"/>
+<coldgrtieuchuan tblColName="NV_Ngayvao" title="Ngày vào" hide="false" width="90" positionCol="5"/>
+<coldgrtieuchuan tblColName="PN_SoNgayNamTruoc" title="Phép năm năm trước" hide="false" width="60" positionCol="6"/>
+      ]]>
+    </sample_xml>
+
+    <step_1_result>
+      <description>Parse and UPPERCASE all column names, sort by positionCol</description>
+      <parsed_columns>
+        NV_TEN (pos 1), DV_MA_ (pos 2), NV_MA (pos 3), CV_TEN (pos 4),
+        NV_NGAYVAO (pos 5), PN_SONGAYNAMTRUOC (pos 6)
+      </parsed_columns>
+    </step_1_result>
+
+    <step_2_result>
+      <description>Classify types using priority rules</description>
+      <classifications>
+        NV_TEN → text (rule: _TEN pattern)
+        DV_MA_ → text (rule: _MA pattern)
+        NV_MA → text (rule: _MA pattern)
+        CV_TEN → text (rule: _TEN pattern)
+        NV_NGAYVAO → date (rule: title contains "Ngày")
+        PN_SONGAYNAMTRUOC → number (rule: PN_ prefix)
+      </classifications>
+    </step_2_result>
+
+    <step_3_output>
+      <description>Grid_0_cols_all — all columns including STT from original</description>
+      <code>
+const Grid_0_cols_all = [
+  "STT",
+  "NV_TEN",
+  "DV_MA_",
+  "NV_MA",
+  "CV_TEN",
+  "NV_NGAYVAO",
+  "PN_SONGAYNAMTRUOC",
+];
+      </code>
+    </step_3_output>
+
+    <step_4_output>
+      <description>Grid_0_cols_display — only visible columns (all visible in this example)</description>
+      <code>
+const Grid_0_cols_display = [
+  "STT",
+  "NV_TEN",
+  "DV_MA_",
+  "NV_MA",
+  "CV_TEN",
+  "NV_NGAYVAO",
+  "PN_SONGAYNAMTRUOC",
+];
+      </code>
+    </step_4_output>
+
+    <step_5_output>
+      <description>Grid_0_cols_labels — column name to Vietnamese title mapping</description>
+      <code>
+const Grid_0_cols_labels = {
+  STT: "STT",
+  NV_TEN: "Họ Tên",
+  DV_MA_: "Đơn vị",
+  NV_MA: "Số thẻ",
+  CV_TEN: "Chức vụ",
+  NV_NGAYVAO: "Ngày vào",
+  PN_SONGAYNAMTRUOC: "Phép năm năm trước",
+};
+      </code>
+    </step_5_output>
+
+    <step_6_output>
+      <description>Grid_0_cols_types — column name to data type mapping</description>
+      <code>
+const Grid_0_cols_types = {
+  STT: "text",
+  NV_TEN: "text",
+  DV_MA_: "text",
+  NV_MA: "text",
+  CV_TEN: "text",
+  NV_NGAYVAO: "date",
+  PN_SONGAYNAMTRUOC: "number",
+};
+      </code>
+    </step_6_output>
+
+    <completion_report>
+      <![CDATA[
+## Checklist cuối cùng
+
+| Metric | Value |
+|--------|-------|
+| Tổng số cột trong cols_all | 7 |
+| Số cột bị ẩn (hide=true) | 0 |
+| Số cột hiển thị (cols_display) | 7 |
+| Phân loại types | 5 text, 1 number, 1 date, 0 action |
+| Cột đã UPPERCASE | NV_Ten→NV_TEN, DV_Ma_→DV_MA_, NV_Ma→NV_MA, CV_Ten→CV_TEN, NV_Ngayvao→NV_NGAYVAO, PN_SoNgayNamTruoc→PN_SONGAYNAMTRUOC |
+      ]]>
+    </completion_report>
+
+    <key_takeaways>
+      <takeaway>Always UPPERCASE all column names — the XML may have mixed case</takeaway>
+      <takeaway>STT from original code is preserved even if not in XML</takeaway>
+      <takeaway>PN_ prefix columns are always number (leave day counts)</takeaway>
+      <takeaway>_TEN and _MA patterns are always text regardless of content</takeaway>
+    </key_takeaways>
+  </example>
+
+  <example name="hidden_columns">
+    <scenario>
+      XML contains columns with hide="true" — these appear in cols_all and
+      cols_labels/cols_types but NOT in cols_display.
+    </scenario>
+
+    <sample_xml>
+      <![CDATA[
+<coldgrtieuchuan tblColName="NV_ID" title="ID" hide="TRUE" width="0" positionCol="0"/>
+<coldgrtieuchuan tblColName="NV_Ten" title="Họ Tên" hide="false" width="150" positionCol="1"/>
+      ]]>
+    </sample_xml>
+
+    <result>
+      <cols_all>["STT", "NV_ID", "NV_TEN"] — includes hidden NV_ID</cols_all>
+      <cols_display>["STT", "NV_TEN"] — excludes hidden NV_ID</cols_display>
+      <cols_labels>Both NV_ID and NV_TEN have labels</cols_labels>
+      <cols_types>Both NV_ID and NV_TEN have types</cols_types>
+      <checklist_note>Hidden columns: NV_ID</checklist_note>
+    </result>
+  </example>
+</refactor_examples>

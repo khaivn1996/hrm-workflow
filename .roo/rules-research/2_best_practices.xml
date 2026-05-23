@@ -1,0 +1,97 @@
+<research_best_practices>
+  <general_principles>
+    <principle priority="high">
+      <name>Read before answering</name>
+      <description>Always read the actual source code before making claims about how something works</description>
+      <rationale>The codebase may deviate from common patterns or documentation; only the code is authoritative</rationale>
+    </principle>
+
+    <principle priority="high">
+      <name>Cite specific locations</name>
+      <description>Reference files and line numbers when reporting findings</description>
+      <rationale>Developers need to verify and navigate to the relevant code quickly</rationale>
+    </principle>
+
+    <principle priority="high">
+      <name>No modifications</name>
+      <description>Never edit, create, or delete files — this mode is strictly read-only exploration</description>
+      <rationale>Research should be safe to run at any time without risk of breaking anything</rationale>
+    </principle>
+
+    <principle priority="medium">
+      <name>Trace complete flows</name>
+      <description>When investigating a feature, trace the full path from UI to database and back</description>
+      <rationale>Partial traces can be misleading; understanding the full picture prevents incorrect conclusions</rationale>
+    </principle>
+
+    <principle priority="medium">
+      <name>Note what you cannot determine</name>
+      <description>Explicitly flag areas where the code is ambiguous, missing, or requires runtime testing to verify</description>
+      <rationale>Honest uncertainty is more valuable than confident guesses</rationale>
+    </principle>
+  </general_principles>
+
+  <search_strategy>
+    <guideline>
+      <rule>Start with semantic search (codebase_search) for conceptual queries</rule>
+      <rationale>Semantic search finds related code even when exact terms differ</rationale>
+    </guideline>
+
+    <guideline>
+      <rule>Use regex search (search_files) for exact identifiers, function names, or query keys</rule>
+      <rationale>Exact matches are faster and more precise for known identifiers</rationale>
+    </guideline>
+
+    <guideline>
+      <rule>Use directory listings to understand module organization before diving into files</rule>
+      <rationale>Understanding structure prevents missing related files</rationale>
+    </guideline>
+
+    <guideline>
+      <rule>Use indentation mode when reading code at a specific line from search results</rule>
+      <rationale>Indentation mode returns complete, syntactically valid code blocks</rationale>
+    </guideline>
+  </search_strategy>
+
+  <output_formatting>
+    <guideline>
+      <rule>Use markdown headings to organize findings by topic or flow stage</rule>
+    </guideline>
+
+    <guideline>
+      <rule>Include clickable file references in the format [filename](relative/path:line)</rule>
+    </guideline>
+
+    <guideline>
+      <rule>Use tables for comparing patterns across modules</rule>
+    </guideline>
+
+    <guideline>
+      <rule>Use code blocks for key snippets that illustrate the finding</rule>
+    </guideline>
+
+    <guideline>
+      <rule>Keep summaries concise; put detailed traces in expandable sections or follow-up responses</rule>
+    </guideline>
+  </output_formatting>
+
+  <common_pitfalls>
+    <pitfall>
+      <description>Answering from memory or assumptions instead of reading the code</description>
+      <why_problematic>The HRM codebase has project-specific patterns that may not match common conventions</why_problematic>
+      <correct_approach>Always read the relevant files before reporting findings</correct_approach>
+    </pitfall>
+
+    <pitfall>
+      <description>Stopping the trace at the API layer without checking the query registry</description>
+      <why_problematic>The actual SQL logic lives in query files, not in the router or service layer</why_problematic>
+      <correct_approach>Follow the query key from the router through to the queries/ file to see the actual SQL</correct_approach>
+    </pitfall>
+
+    <pitfall>
+      <description>Ignoring permission and auth checks in the flow</description>
+      <why_problematic>Many routes have permission dependencies that affect behavior</why_problematic>
+      <correct_approach>Note auth decorators, permission checks, and route guards as part of the flow</correct_approach>
+    </pitfall>
+  </common_pitfalls>
+</research_best_practices>

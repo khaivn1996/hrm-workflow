@@ -1,0 +1,5 @@
+.pytest_cache
+.vscode
+hrm_BE
+hrm_FE
+desktop.ini

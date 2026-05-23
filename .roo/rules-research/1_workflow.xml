@@ -1,0 +1,93 @@
+<research_workflow>
+  <mode_overview>
+    This mode explores and analyzes the HRM codebase without making changes.
+    It traces data flows, identifies patterns, answers architectural questions,
+    and produces structured findings to help developers understand the system.
+  </mode_overview>
+
+  <project_architecture>
+    <frontend>
+      <framework>Vue 3 Composition API with script setup</framework>
+      <ui>Element Plus</ui>
+      <state>Pinia with persistedstate</state>
+      <router>Vue Router with permission-based guards</router>
+      <api_layer>Centralized API modules in src/apis/</api_layer>
+      <utilities>Excel workers, loading helpers, validation utilities</utilities>
+      <path>hrm_FE/</path>
+    </frontend>
+
+    <backend>
+      <framework>FastAPI</framework>
+      <orm>SQLAlchemy 2.0</orm>
+      <database>SQL Server via pyodbc</database>
+      <auth>JWT HS256, bcrypt, heartbeat session</auth>
+      <sql_pattern>Query Registry in app/queries/</sql_pattern>
+      <path>hrm_BE/</path>
+    </backend>
+
+    <documentation>
+      <path>docs/</path>
+    </documentation>
+  </project_architecture>
+
+  <initialization>
+    <step number="1">
+      <action>Understand the research question</action>
+      <details>
+        Parse the user's question to identify:
+        - What feature, flow, or pattern they want to understand
+        - Whether they need a broad overview or a specific trace
+        - Whether the question spans frontend, backend, or both
+      </details>
+    </step>
+
+    <step number="2">
+      <action>Identify starting points</action>
+      <details>
+        Based on the question, determine which files or directories to examine first:
+        - Feature name → look for matching Vue component, API module, router, query file
+        - Data flow → start from the user-facing component and trace inward
+        - Pattern question → identify representative examples across modules
+        - Bug investigation → start from the symptom location and trace dependencies
+      </details>
+    </step>
+  </initialization>
+
+  <main_workflow>
+    <phase name="discovery">
+      <description>Locate the relevant code areas</description>
+      <steps>
+        <step>Use semantic search to find files related to the topic</step>
+        <step>Read directory listings to understand module structure</step>
+        <step>Identify the key files that participate in the flow</step>
+      </steps>
+    </phase>
+
+    <phase name="deep_reading">
+      <description>Read and understand the relevant code</description>
+      <steps>
+        <step>Read each key file, focusing on exports, function signatures, and data transformations</step>
+        <step>Trace function calls and data flow between files</step>
+        <step>Note patterns, conventions, and any deviations</step>
+        <step>Identify dependencies and shared utilities</step>
+      </steps>
+    </phase>
+
+    <phase name="synthesis">
+      <description>Organize findings into a clear answer</description>
+      <steps>
+        <step>Summarize the flow or pattern with file references</step>
+        <step>Highlight key decision points, branching logic, or important details</step>
+        <step>Note any inconsistencies, gaps, or areas needing further investigation</step>
+        <step>Present findings in a structured format with clickable file references</step>
+      </steps>
+    </phase>
+  </main_workflow>
+
+  <completion_criteria>
+    <criterion>The user's question has been answered with specific file and line references</criterion>
+    <criterion>Data flows are traced end-to-end where applicable</criterion>
+    <criterion>Findings are presented in a clear, structured format</criterion>
+    <criterion>Ambiguities or gaps are explicitly noted</criterion>
+  </completion_criteria>
+</research_workflow>
