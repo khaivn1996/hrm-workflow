@@ -35,7 +35,7 @@ This is an HRM system with:
 
 ### 1. Think Before Coding
 
-Read → Reason → Change → Verify. State assumptions explicitly. Read before editing — inspect files, call sites, types, tests, configs, and nearby conventions. Never assume without verifying.
+Read → Reason → Change → Verify. State assumptions explicitly. If something is unclear, stop and ask. Read before editing — inspect files, call sites, types, tests, configs, and nearby conventions. Never assume without verifying.
 
 ### 2. Simplicity First
 
