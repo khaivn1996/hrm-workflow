@@ -1,7 +1,7 @@
 # HRM Project - Implementation Details
 
 > Auto-generated bởi `/autodocs` workflow
-> Cập nhật lần cuối: 2026-05-16
+> Cập nhật lần cuối: 2026-05-25
 
 ---
 
@@ -244,6 +244,8 @@ log_audit(user_id, username, action, resource_type, resource_id, ip, details, db
 | 12  | **Lazy loading routes**                      | Giảm initial bundle size, Vite tách mỗi page thành chunk riêng (2026-05-13)       | 64 dynamic imports `() => import(...)`, 4 core static (Layout, Login, Guide, General) |
 | 13  | **CORS env-based**                           | `allow_origins=["*"]` → env `CORS_ORIGINS` (2026-05-13)                           | Dev: localhost defaults; Prod: set `CORS_ORIGINS` trong docker-compose                |
 | 14  | ~~**axiosConfig.js**~~ (2026-05-13)          | ✅ ĐÃ XÓA: dead code, chức năng đã có trong `axiosInterceptor.js`                 | Xóa file thừa, giảm confusion                                                         |
+| 15  | **CodeGraph MCP servers** (2026-05-25)       | 2 MCP servers `codegraph-fe` / `codegraph-be` trong `.roo/mcp.json`, chạy `codegraph serve --mcp` tại `hrm_FE` / `hrm_BE` | Dùng bởi mode `ask-codegraph` để phân tích dependency/impact mà không cần đọc file thủ công |
+| 16  | **`ask-codegraph` mode** (2026-05-25)        | Mode read-only dùng CodeGraph MCP tools để trace callers, callees, imports, exports, và affected files | Không edit file; output: Target → Direct deps → Reverse deps → Affected areas → Risk level → Suggested verification |
 
 ---
 
@@ -254,6 +256,13 @@ HRM/
 ├── docs/
 │   ├── implements.md                    # (this file - single source of truth)
 │   └── heartbeat_session_management.md
+│
+├── .roo/
+│   ├── mcp.json                         # MCP server config: context7, playwright, codegraph-fe, codegraph-be
+│   ├── commands/                        # Slash commands: /autodocs, /exportMarkdown
+│   ├── rules/                           # Core rules: superpowers-hrm-core, verification
+│   ├── skills/                          # Skills: debugging, planning, review, tdd
+│   └── rules-*/                         # Mode-specific rule files
 │
 ├── hrm_BE/                              # Backend (FastAPI)
 │   ├── main.py                          # App entry + startup events
@@ -996,9 +1005,10 @@ User mở /baocao/thongkegkh (Thống kê gửi KH)
 
 > Chỉ THÊM dòng mới, KHÔNG xóa dòng cũ.
 
-| Ngày       | Module    | Thay đổi                                                                                                                                                                               | Conversation |
-| ---------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| 2026-05-16 | BAOCAO    | +`ThongKeNghiPhepTV.vue` (Thống kê nghỉ phép TV: 2 tabs, skeleton loading, Excel export) + route `/baocao/thongkenghipheptv` + `thongkeksk_queries.py` +`BCTKNPTV` query key (7KB→9KB) | /autodocs    |
+| Ngày       | Module      | Thay đổi                                                                                                                                                                               | Conversation        |
+| ---------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| 2026-05-25 | Docs/Config | +mode `ask-codegraph` (🤔 Ask CodeGraph, read-only impact analysis) vào `.roomodes`; +2 MCP servers `codegraph-fe` / `codegraph-be` vào `.roo/mcp.json` (`codegraph serve --mcp`)     | /autodocs (2f90f4a) |
+| 2026-05-16 | BAOCAO      | +`ThongKeNghiPhepTV.vue` (Thống kê nghỉ phép TV: 2 tabs, skeleton loading, Excel export) + route `/baocao/thongkenghipheptv` + `thongkeksk_queries.py` +`BCTKNPTV` query key (7KB→9KB) | /autodocs           |
 | 2026-05-13 | Docs      | /autodocs incremental: đồng bộ endpoint `query/registry` + `batch-insert/registry` theo `tsql.py`, cập nhật flow Import BHXH (`ThongKeGuiKH.vue`), xóa `axiosConfig.js` khỏi Utilities | /autodocs    |
 | 2026-05-12 | BAOCAO    | +`ThongKeCBCNVHHHD.vue` (385 lines, Crystal Reports DS hết hạn HĐ) + `ThongKeGuiKH.vue` (1273 lines, 5 SP reports + Import BHXH Excel flow) + 2 routes + 9 API functions               | /autodocs    |
 | 2026-05-12 | Backend   | +3 batch insert keys (CLTBAPP×2, ImportBHXH), +7 query keys (TINHTCTV×2, ImportBHXH×5) trong `thongkeksk_queries.py`, timeout 5 phút                                                   | /autodocs    |
