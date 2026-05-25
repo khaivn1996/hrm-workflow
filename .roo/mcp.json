@@ -1,21 +1,45 @@
 {
-  "mcpServers": {
-    "context7": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@upstash/context7-mcp"
-      ],
-      "env": {
-        "DEFAULT_MINIMUM_TOKENS": ""
-      }
-    },
-    "playwright": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@playwright/mcp@0.0.38"
-      ]
-    }
-  }
+	"mcpServers": {
+		"context7": {
+			"command": "npx",
+			"args": [
+				"-y",
+				"@upstash/context7-mcp"
+			],
+			"env": {
+				"DEFAULT_MINIMUM_TOKENS": ""
+			}
+		},
+		"playwright": {
+			"command": "npx",
+			"args": [
+				"-y",
+				"@playwright/mcp@0.0.38"
+			]
+		},
+		"codegraph-be": {
+			"command": "cmd",
+			"args": [
+				"/c",
+				"cd /d C:\\Source\\Gitea\\HRM\\hrm_BE && codegraph serve --mcp"
+			],
+			"alwaysAllow": [
+				"codegraph_status"
+			]
+		},
+		"codegraph-fe": {
+			"command": "cmd",
+			"args": [
+				"/c",
+				"cd /d C:\\Source\\Gitea\\HRM\\hrm_FE && codegraph serve --mcp"
+			],
+			"alwaysAllow": [
+				"codegraph_search",
+				"codegraph_callers",
+				"codegraph_impact",
+				"codegraph_node",
+				"codegraph_status"
+			]
+		}
+	}
 }
