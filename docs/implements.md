@@ -1,7 +1,7 @@
 # HRM Project - Implementation Details
 
 > Auto-generated bởi `/autodocs` workflow
-> Cập nhật lần cuối: 2026-05-25
+> Cập nhật lần cuối: 2026-05-27
 
 ---
 
@@ -596,7 +596,7 @@ python -m pytest tests/ -x
 | `apiChamcong.js`  | 33KB  | Chấm công trong/ngoài functions                                                                                                              | `/api/tsql/*`                             |
 | `apiNhansu.js`    | 58KB  | Nhân sự functions                                                                                                                            | `/api/tsql/*`                             |
 | `apiDanhgia.js`   | 6.2KB | Đánh giá functions                                                                                                                           | `/api/tsql/*`                             |
-| `apiBaocao.js`    | 9KB   | TKKSK (6), TKDBL (2), TCTTTGBH (1), CNSSBH (2), NGHIOPTHANG (2), TKLVTTGT (3), TINHTCTV (2), ThongKeGuiKH (2), ImportBHXH (5) = 25 functions | `/api/tsql/*`                             |
+| `apiBaocao.js`    | ~11KB | TKKSK (6), TKDBL (2), TCTTTGBH (1), CNSSBH (2), NGHIOPTHANG (2), TKLVTTGT (3), TINHTCTV (2), ThongKeGuiKH (2), ImportBHXH (5), TKPN (2), TKBCTH (3) = **30 functions** | `/api/tsql/*` |
 | `apiTinhluong.js` | 27KB  | Tính lương functions                                                                                                                         | `/api/tsql/*`                             |
 
 ### Vue Components
@@ -661,26 +661,28 @@ python -m pytest tests/ -x
 
 #### BAOCAO (17 files + Dialogs/ 1 file)
 
-| Component                      | Size | Permission                     | Mô tả                                                                                                                |
-| ------------------------------ | ---- | ------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
-| `ThongKeLVTTGT.vue`            | 20KB | `1frmTKTTGT`                   | Thống kê CN trực tiếp/gián tiếp. Dual grid: DV→GridWithRowSpan, CN→MultiSelectGrid. Excel formatted export (ExcelJS) |
-| `ThongKeKSK.vue`               | 20KB | `1frmKhamSK`                   | Thống kê khám sức khỏe                                                                                               |
-| `ThongKeDBL.vue`               | 16KB | `1frmDanhSachThongKeNgayCong`  | Thống kê diễn biến lương                                                                                             |
-| `DSBINHBAUNAM.vue`             | 14KB | `1frmDanhSachCB_CNVBinhBauNam` | DS bình bầu năm                                                                                                      |
-| `DSNGHIOPTHANG.vue`            | —    | —                              | DS nghỉ ốm/phép tháng                                                                                                |
-| `ThamGiaBH.vue`                | —    | —                              | Tra cứu tham gia BH                                                                                                  |
-| `ThongKeQuyetDinhThoiViec.vue` | —    | —                              | Thống kê QĐ thôi việc                                                                                                |
-| `CapNhatSoSoBH.vue`            | —    | —                              | Cập nhật sổ số BH                                                                                                    |
-| `TraCuuTTTGBH.vue`             | —    | `1frmTraCuuThongTinThamGiaBH`  | Tra cứu thông tin tham gia BHXH                                                                                      |
-| `ThongKeHopDong.vue`           | —    | `1frmThongKeHD`                | Thống kê hợp đồng lao động                                                                                           |
-| `DSCBCNVHetHanHDKyLai.vue`     | —    | `1frmDanhSachHetHangHDKyLai`   | DS CBCNV hết hạn HĐ ký lại                                                                                           |
-| `TroCapThoiViec.vue`           | —    | `1ThoiViecKhongThamGiaBHTN`    | Tính trợ cấp thôi việc (không tham gia BHTN)                                                                         |
-| `ThongKeCBCNVHHHD.vue`         | 385  | `1frmDanhSachCB_CNVhethanHDLD` | DS CB-CNV hết hạn HĐ. Crystal Reports PDF, date range + đơn vị filter, dual report (TCT/DV), skeleton loading        |
-| `ThongKeGuiKH.vue`             | 1273 | `1frmtkgkh`                    | Báo cáo tổng hợp gửi KH. Tab Thống Kê (5 SP reports) + Tab Import BHXH (Excel→temp→commit). MultiSelectGrid, ExcelJS |
-| `ThongKeNghiPhepTV.vue`        | 529  | `1frmThongKeNghiPhep`          | Thống kê nghỉ phép thôi việc. 2 tabs: Thống Kê (theo đơn vị, MultiSelectGrid) + Xem DBL (theo số thẻ). Skeleton loading, Excel export |
-| `BangCamKetCNTNCDMCT.vue`      | 9KB  | —                              | Bảng cam kết CNTN CDMCT                                                                                              |
-| `ToKhaiThue.vue`               | 8KB  | —                              | Tờ khai thuế                                                                                                         |
-| `Dialogs/frmReportKhamSK.vue`  | 13KB | — (dialog)                     | Dialog report KSK                                                                                                    |
+| Component                      | Size  | Permission                     | Mô tả                                                                                                                |
+| ------------------------------ | ----- | ------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
+| `ThongKeLVTTGT.vue`            | 20KB  | `1frmTKTTGT`                   | Thống kê CN trực tiếp/gián tiếp. Dual grid: DV→GridWithRowSpan, CN→MultiSelectGrid. Excel formatted export (ExcelJS) |
+| `ThongKeKSK.vue`               | 20KB  | `1frmKhamSK`                   | Thống kê khám sức khỏe                                                                                               |
+| `ThongKeDBL.vue`               | 16KB  | `1frmDanhSachThongKeNgayCong`  | Thống kê diễn biến lương                                                                                             |
+| `DSBINHBAUNAM.vue`             | 14KB  | `1frmDanhSachCB_CNVBinhBauNam` | DS bình bầu năm                                                                                                      |
+| `DSNGHIOPTHANG.vue`            | —     | —                              | DS nghỉ ốm/phép tháng                                                                                                |
+| `ThamGiaBH.vue`                | —     | —                              | Tra cứu tham gia BH                                                                                                  |
+| `ThongKeQuyetDinhThoiViec.vue` | —     | —                              | Thống kê QĐ thôi việc                                                                                                |
+| `CapNhatSoSoBH.vue`            | —     | —                              | Cập nhật sổ số BH                                                                                                    |
+| `TraCuuTTTGBH.vue`             | —     | `1frmTraCuuThongTinThamGiaBH`  | Tra cứu thông tin tham gia BHXH                                                                                      |
+| `ThongKeHopDong.vue`           | —     | `1frmThongKeHD`                | Thống kê hợp đồng lao động                                                                                           |
+| `DSCBCNVHetHanHDKyLai.vue`     | —     | `1frmDanhSachHetHangHDKyLai`   | DS CBCNV hết hạn HĐ ký lại                                                                                           |
+| `TroCapThoiViec.vue`           | —     | `1ThoiViecKhongThamGiaBHTN`    | Tính trợ cấp thôi việc (không tham gia BHTN)                                                                         |
+| `ThongKeCBCNVHHHD.vue`         | 385   | `1frmDanhSachCB_CNVhethanHDLD` | DS CB-CNV hết hạn HĐ. Crystal Reports PDF, date range + đơn vị filter, dual report (TCT/DV), skeleton loading        |
+| `ThongKeGuiKH.vue`             | 1273  | `1frmtkgkh`                    | Báo cáo tổng hợp gửi KH. Tab Thống Kê (5 SP reports) + Tab Import BHXH (Excel→temp→commit). MultiSelectGrid, ExcelJS |
+| `ThongKeNghiPhepTV.vue`        | 529   | `1frmThongKeNghiPhep`          | Thống kê nghỉ phép thôi việc. 2 tabs: Thống Kê (theo đơn vị, MultiSelectGrid) + Xem DBL (theo số thẻ). Skeleton loading, Excel export |
+| `ThongKePhepNam.vue`           | 15KB  | `1frmPhepNam`                  | Thống kê phép năm. 2 chế độ: Tổng quát (`GETALL_PHEPNAMBANGTONG_2018`) / Chi tiết (`SP_THONGKEPHEPNAMDV_TAM2018_WEB`). MultiSelectGrid, Excel export |
+| `BaoCaoTongHop/BaoCaoTongHop.vue` | 28KB | `1frmBaoCaoTongHop`          | Báo cáo tổng hợp. 12 loại báo cáo (TKTG, TKTUOIGT, TKTD, TKTN, TKTNTV_T, TKTNGTINH, TKLDNGHIVIEC_T, TKNGHIKHONGPHEP, TKTYLENGHIVIECNAM, TKNGHIVIECKHONGLYDO, TKDANHSACHMANGTHAI, TKTROCAPNUOICONDUOI6T). Dual grid: GridWithRowSpan (summary merge KHU) / MultiSelectGrid (chi tiết). Excel styled export qua `XuatExcel_DinhdangchungTieude`. Layout composable tách riêng. |
+| `BangCamKetCNTNCDMCT.vue`      | 9KB   | —                              | Bảng cam kết CNTN CDMCT                                                                                              |
+| `ToKhaiThue.vue`               | 8KB   | —                              | Tờ khai thuế                                                                                                         |
+| `Dialogs/frmReportKhamSK.vue`  | 13KB  | — (dialog)                     | Dialog report KSK                                                                                                    |
 
 #### TINHLUONG (19 files + Dialogs/ 2 files)
 
@@ -733,15 +735,16 @@ python -m pytest tests/ -x
 
 ### Utilities
 
-| File                  | Size  | Functions                                                                                                                    | Mô tả                                                             |
-| --------------------- | ----- | ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| `axiosInterceptor.js` | 2.4KB | `setupAxiosInterceptors()`                                                                                                   | Xử lý 401/403/500, heartbeat 401                                  |
-| `LoadingView.js`      | 1.8KB | `showLoading()`, `hideLoading()`, `Success()`, `Error()`, `Confirm()`, `Alert()`                                             | UI loading overlay + ElNotification                               |
-| `function.js`         | 1.4KB | `debounce()`, `debounceAsync()`, `throttle()`                                                                                | Search, filter optimization                                       |
-| `useDataWorker.js`    | 2.6KB | `useDataWorker()` → `sendToWorker()`, `exportExcel()`, `exportExcelFormatted()`                                              | Composable Web Worker wrapper (gộp boilerplate + useExcelExport)  |
-| `useExcelExport.js`   | 6KB   | `useExcelExport(sendToWorker)` → `exportExcel()`, `exportExcelFormatted({title, customHeaders, dataMergeColumns, merges})`   | Composable xuất Excel: basic (XLSX) + formatted (ExcelJS styling) |
-| `excelHelpers.js`     | 4.6KB | `formatValueForExcel()`, `createTransformRow()`, `parseDateFlexible()`                                                       | Excel format + grid→Excel transform                               |
-| `validated.js`        | 1.3KB | `onNumericWithDecimalKeyPress()`, `onNumericKeyPress()`, `onStringKeyPress()`, `isArrayEmpty()`, `safeNum()`, `valOrEmpty()` | Form validation helpers (6 helpers)                               |
+| File                  | Size   | Functions                                                                                                                    | Mô tả                                                             |
+| --------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `axiosInterceptor.js` | 2.4KB  | `setupAxiosInterceptors()`                                                                                                   | Xử lý 401/403/500, heartbeat 401                                  |
+| `LoadingView.js`      | 1.8KB  | `showLoading()`, `hideLoading()`, `Success()`, `Error()`, `Confirm()`, `Alert()`                                             | UI loading overlay + ElNotification                               |
+| `function.js`         | 1.4KB  | `debounce()`, `debounceAsync()`, `throttle()`                                                                                | Search, filter optimization                                       |
+| `useDataWorker.js`    | 2.6KB  | `useDataWorker()` → `sendToWorker()`, `exportExcel()`, `exportExcelFormatted()`                                              | Composable Web Worker wrapper (gộp boilerplate + useExcelExport)  |
+| `useExcelExport.js`   | 6KB    | `useExcelExport(sendToWorker)` → `exportExcel()`, `exportExcelFormatted({title, customHeaders, dataMergeColumns, merges})`   | Composable xuất Excel: basic (XLSX) + formatted (ExcelJS styling) |
+| `useExcelBaoCao.js`   | 8.9KB  | `XuatExcel_DinhdangchungTieude(options)` — helper trung tâm xuất Excel có tiêu đề (VN + TQ), footer, cellStylesBuilder, hỗ trợ `fetcher` hoặc `rows` tĩnh | Dùng bởi BAOCAO components (BaoCaoTongHop, ThongKePhepNam, ...) |
+| `excelHelpers.js`     | 4.6KB  | `formatValueForExcel()`, `createTransformRow()`, `parseDateFlexible()`                                                       | Excel format + grid→Excel transform                               |
+| `validated.js`        | 1.3KB  | `onNumericWithDecimalKeyPress()`, `onNumericKeyPress()`, `onStringKeyPress()`, `isArrayEmpty()`, `safeNum()`, `valOrEmpty()` | Form validation helpers (6 helpers)                               |
 
 ### Layout
 
@@ -814,6 +817,8 @@ python -m pytest tests/ -x
 | `/baocao/dshhhd`                 | `ThongKeCBCNVHHHD`     | `1frmDanhSachCB_CNVhethanHDLD`     |
 | `/baocao/thongkegkh`             | `ThongKeGuiKH`         | `1frmtkgkh`                        |
 | `/baocao/thongkenghipheptv`     | `ThongKeNghiPhepTV`    | `1frmThongKeNghiPhep`              |
+| `/baocao/thongkepn`             | `ThongKePhepNam`       | `1frmPhepNam`                      |
+| `/baocao/baocaotonghop`         | `BaoCaoTongHop`        | `1frmBaoCaoTongHop`                |
 | `/hethong/quoctich`              | `QuocTich`             | —                                  |
 | `/tinhluong/truphep`             | `TruPhep`              | `1frmTruPhep`                      |
 | `/tinhluong/dieuchinhmucdongbh`  | `DieuChinhMucDongBH`   | `1frmMucdongBH`                    |
@@ -906,6 +911,44 @@ User xem report
 ### Module: BAOCAO (Báo cáo)
 
 ```
+User mở /baocao/thongkepn (Thống kê phép năm)
+  → Router guard: check permission "1frmPhepNam"
+  → ThongKePhepNam.vue: chọn năm + chế độ (Tổng quát / Chi tiết)
+  → btxem():
+      Tổng quát → apiBaocao.js: ThuTucTongQuat_TKPN(NAM)
+        → POST /api/tsql/procedure/select { procedure_name: "GETALL_PHEPNAMBANGTONG_2018", params: {NAM, KHU:"TCT"} }
+      Chi tiết  → apiBaocao.js: ThuTucThongKe_TKPN(NAM)
+        → POST /api/tsql/procedure/select { procedure_name: "SP_THONGKEPHEPNAMDV_TAM2018_WEB", params: {NAM} }
+  → MultiSelectGrid.vue: render data
+  → btExcel() → XuatExcel_DinhdangchungTieude() → useDataWorker exportExcelFormatted
+
+User mở /baocao/baocaotonghop (Báo cáo tổng hợp)
+  → Router guard: check permission "1frmBaoCaoTongHop"
+  → BaoCaoTongHop.vue: chọn loại báo cáo (12 loại) + ngày + checkbox Chi tiết
+  → btxem() dispatch theo loại:
+      TKTG  → methodLoad_TKTG()
+        → apiBaocao.js: LoadDS_1_TKBCTH(DenNgay, chkchitiet)
+          → POST /api/tsql/procedure/select
+            { procedure_name: "SP_BCTH_THONGKETONGIAO_MOI_TCT_S[_chitiet]", params: {ngay} }
+      TKTUOIGT → methodLoad_ThongKeTuoiGioiTinh()
+        → apiBaocao.js: LoadDS_2_TKBCTH(TuNgay, DenNgay, chkchitiet)
+          → POST /api/tsql/procedure/select
+            { procedure_name: "SP_BCTH_THONGKETUOIGIOITINH_MOI_TCT_S[_chitiet2019]", params: {tungay, ngay} }
+      TKTD  → methodLoad_ThongKeTonGiao()
+        → apiBaocao.js: LoadDS_3_TKBCTH(DenNgay, chkchitiet)
+          → POST /api/tsql/procedure/select
+            { procedure_name: "SP_BCTH_THONGKETRINHDOHOCVAN_MOI_TCT_S[_chitiet]", params: {ngay} }
+      TKTN/TKTNTV_T/... (9 loại còn lại) → Cần kiểm tra thêm (chưa implement load trong btxem)
+  → Grid render:
+      isSummaryMergeMode (TKTG/TKTUOIGT/TKTD không chi tiết) → GridWithRowSpan (merge KHU rowspan)
+      Còn lại → MultiSelectGrid
+  → NHOM logic: NHOM ∈ {2,4,6,7} → text đỏ; NHOM=7 → bold (cả grid lẫn Excel)
+  → btExcel() → resolveExcelConfig() → XuatExcel_DinhdangchungTieude()
+    → useDataWorker exportExcelFormatted (ExcelJS styled, tiêu đề VN + TQ, cellStylesBuilder)
+  → Layout columns tách riêng: useLayoutBaoCaoTongHop.js
+```
+
+```
 User mở /baocao/dshhhd (DS CB-CNV hết hạn HĐ)
   → Router guard: check permission "1frmDanhSachCB_CNVhethanHDLD"
   → ThongKeCBCNVHHHD.vue onMounted()
@@ -988,13 +1031,13 @@ User mở /baocao/thongkegkh (Thống kê gửi KH)
 | Batch insert keys      | 11                                                                                                |
 | Background tasks       | 1                                                                                                 |
 | Unit tests             | 103 (15 heartbeat + 18 auth + 12 users + 16 security + 19 tsql/sys mock + 21 batch + 2 writelog)  |
-| Frontend components    | 79 (8 CHAMCONG + 24 NHANSU + 5 DANHGIA + 19 BAOCAO + 1 HETHONG + 21 TINHLUONG + 5 shared + Basic) |
+| Frontend components    | 81 (8 CHAMCONG + 24 NHANSU + 5 DANHGIA + 21 BAOCAO + 1 HETHONG + 21 TINHLUONG + 5 shared + Basic) |
 | Pinia stores           | 2                                                                                                 |
 | API modules            | 7                                                                                                 |
-| Utility files          | 7                                                                                                 |
+| Utility files          | 8 (+`useExcelBaoCao.js`)                                                                          |
 | Layout components      | 4                                                                                                 |
 | Shared views           | 5                                                                                                 |
-| Routes                 | 61                                                                                                |
+| Routes                 | 63 (+`/baocao/thongkepn`, `/baocao/baocaotonghop`)                                                |
 | Dependencies (BE)      | 12                                                                                                |
 | Dependencies (FE)      | 26 prod + 15 dev                                                                                  |
 | i18n Locales           | 2 (vi, zh)                                                                                        |
@@ -1007,6 +1050,7 @@ User mở /baocao/thongkegkh (Thống kê gửi KH)
 
 | Ngày       | Module      | Thay đổi                                                                                                                                                                               | Conversation        |
 | ---------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| 2026-05-27 | BAOCAO      | +`ThongKePhepNam.vue` (15KB, 2 chế độ tổng quát/chi tiết, SP-based, `1frmPhepNam`) + route `/baocao/thongkepn`; +`BaoCaoTongHop/BaoCaoTongHop.vue` (28KB, 12 loại báo cáo, dual grid GridWithRowSpan/MultiSelectGrid, NHOM styling, `1frmBaoCaoTongHop`) + route `/baocao/baocaotonghop`; +`useExcelBaoCao.js` (8.9KB, `XuatExcel_DinhdangchungTieude`); +`BaoCaoTongHop/Layouts/useLayoutBaoCaoTongHop.js`; +5 API functions TKPN/TKBCTH trong `apiBaocao.js` | /autodocs |
 | 2026-05-25 | Docs/Config | +mode `ask-codegraph` (🤔 Ask CodeGraph, read-only impact analysis) vào `.roomodes`; +2 MCP servers `codegraph-fe` / `codegraph-be` vào `.roo/mcp.json` (`codegraph serve --mcp`)     | /autodocs (2f90f4a) |
 | 2026-05-16 | BAOCAO      | +`ThongKeNghiPhepTV.vue` (Thống kê nghỉ phép TV: 2 tabs, skeleton loading, Excel export) + route `/baocao/thongkenghipheptv` + `thongkeksk_queries.py` +`BCTKNPTV` query key (7KB→9KB) | /autodocs           |
 | 2026-05-13 | Docs      | /autodocs incremental: đồng bộ endpoint `query/registry` + `batch-insert/registry` theo `tsql.py`, cập nhật flow Import BHXH (`ThongKeGuiKH.vue`), xóa `axiosConfig.js` khỏi Utilities | /autodocs    |
